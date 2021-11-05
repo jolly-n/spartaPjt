@@ -30,10 +30,16 @@
             });
 
             function makeReview() {
+                let title = $('#title').val()
+                let author= $('#author').val()
+                let review= $('#bookReview').val()
+
                 $.ajax({
                     type: "POST",
                     url: "/review",
-                    data: {sample_give:'샘플데이터'},
+                    data: {title_give:title,
+                           author_give:author,
+                           review_give:review},
                     success: function (response) {
                         alert(response["msg"]);
                         window.location.reload();

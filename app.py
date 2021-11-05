@@ -13,9 +13,19 @@ def home():
 ## API 역할을 하는 부분
 @app.route('/review', methods=['POST'])
 def write_review():
-    sample_receive = request.form['sample_give']
-    print(sample_receive)
-    return jsonify({'msg': '이 요청은 POST!'})
+    title_receive = request.form['title_give']
+    author_receive = request.form['author_give']
+    review_receive = request.form['review_give']
+
+    doc = {
+        'title':title_receive,
+        'author':author_receive,
+        'review':review_receive
+    }
+    db.bookreview.insert_one(doc)
+
+    return jsonify({'msg':'나의 리뷰 저장완료 😊'})
+
 
 @app.route('/review', methods=['GET'])
 def read_reviews():
