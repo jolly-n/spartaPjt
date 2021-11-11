@@ -8,4 +8,8 @@ data = requests.get(url,headers=headers)
 
 soup = BeautifulSoup(data.text, 'html.parser')
 
-# 여기에 코딩을 해서 meta tag를 먼저 가져와보겠습니다.
+# og:image | og:title | og:description 가져오기
+title = soup.select_one('meta[property="og:title"]')['content']
+img = soup.select_one('meta[property="og:image"]')['content']
+desc = soup.select_one('meta[property="og:description"]')['content']
+print(title,img,desc)
