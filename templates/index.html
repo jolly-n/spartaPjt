@@ -79,8 +79,31 @@
         }
 
         function order() {
-            alert('주문이 완료되었어요 😊')
+            // 유저가 입력한 input 값 가져오기
+            let name = $('#order-name').val();
+            let count = $('#order-count').val();
+            let address = $('#order-address').val();
+            let phone = $('#order-phone').val();
+
+            // 주문생성 요청하기
+            $.ajax({
+                type: "POST",
+                url: "/order",
+                data: {
+                    name_give: name,
+                    count_give: count,
+                    address_give: address,
+                    phone_give: phone
+                },
+                success: function (response) {
+                    // 성공하면 메세지 반환하기
+                    alert(response["msg"]);
+                    // 페이지 새로고침하기
+                    window.location.reload()
+                }
+            })
         }
+
     </script>
 </head>
 
@@ -102,14 +125,14 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-name">주문자 이름</span>
                 </div>
-                <input type="text" class="form-control" aria-label="Default"
+                <input id=order-name type="text" class="form-control" aria-label="Default"
                        aria-describedby="inputGroup-sizing-default">
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-num">수량</span>
+                    <span class="input-group-text" id="inputGroup-count">수량</span>
                 </div>
-                <select class="custom-select" id="inputGroupSelect01">
+                <select id="order-count" class="custom-select" >
                     <option selected> -- 수량을 선택하세요 -- </option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -122,14 +145,14 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-address">주소</span>
                 </div>
-                <input type="text" class="form-control" aria-label="Default"
+                <input id="order-address" type="text" class="form-control" aria-label="Default"
                        aria-describedby="inputGroup-sizing-default">
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-phone">전화번호</span>
                 </div>
-                <input type="text" class="form-control" aria-label="Default"
+                <input id="order-phone" type="text" class="form-control" aria-label="Default"
                        aria-describedby="inputGroup-sizing-default">
             </div>
             <button onclick="order()" type="button" class="btn btn-danger">주문하기</button>

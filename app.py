@@ -17,9 +17,22 @@ def myshop():
 # 주문하기(POST) API
 @app.route('/order', methods=['POST'])
 def save_order():
-    sample_receive = request.form['sample_give']
-    print(sample_receive)
-    return jsonify({'msg': '이 요청은 POST!'})
+    # 이름|수량|주소|전화번호 받아오기
+    name_receive = request.form['name_give']
+    count_receive = request.form['count_give']
+    address_receive = request.form['address_give']
+    phone_receive = request.form['phone_give']
+
+    # 데이터 몽고디비에 저장하기
+    doc = {
+        'name': name_receive,
+        'count': count_receive,
+        'address': address_receive,
+        'phone': phone_receive
+    }
+    db.myshop.insert_one(doc)
+
+    return jsonify({'msg': '주문이 완료되었어요😊'})
 
 
 # 주문 목록보기(Read) API
