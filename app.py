@@ -8,16 +8,12 @@ from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
 db = client.dbpymongo
 
+
 ## HTML을 주는 부분
 @app.route('/')
 def home():
    return render_template('index.html')
 
-@app.route('/memo', methods=['GET'])
-def listing():
-    sample_receive = request.args.get('sample_give')
-    print(sample_receive)
-    return jsonify({'msg':'GET 연결되었습니다!'})
 
 ## API 역할을 하는 부분
 @app.route('/memo', methods=['POST'])
@@ -49,6 +45,16 @@ def post_Article():
     db.alonememo.insert_one(doc)
 
     return jsonify({'msg':'저장이 완료되었습니다😊'})
+
+
+@app.route('/memo', methods=['GET'])
+def show_Article():
+    # 몽고디비에 저장된 데이터 가져오기
+    article = list(db.alonememo.find({}, {'_id': False}))
+
+    # artical 정보 보내주기
+    return jsonify({'all_article':article})
+
 
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)
