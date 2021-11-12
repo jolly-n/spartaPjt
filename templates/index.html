@@ -62,7 +62,9 @@
 
     <script>
         // 로딩되자마자 환율이 적용되도록 한다.
+        // 로딩되자마자 주문목록이 보이도록 한다.
         $(document).ready(function () {
+            vieworder();
             get_rate();
         })
 
@@ -100,6 +102,31 @@
                     alert(response["msg"]);
                     // 페이지 새로고침하기
                     window.location.reload()
+                }
+            })
+        }
+
+        function vieworder() {
+            $.ajax({
+                type: "GET",
+                url: "/order",
+                data: {},
+                success: function (response) {
+                    let orders = response['all_orders']
+                    for (let i = 0; i < orders.length; i++) {
+                        let name = orders[i]['name']
+                        let count = orders[i]['count']
+                        let address = orders[i]['address']
+                        let phone = orders[i]['phone']
+
+                        let temp_html = `<tr>
+                                            <th scope="row">${name}</th>
+                                            <td>${count}</td>
+                                            <td>${address}</td>
+                                            <td>${phone}</td>
+                                        </tr>`
+                        $('#order-list').append(temp_html)
+                    }
                 }
             })
         }
@@ -167,14 +194,7 @@
                 <th scope="col">전화번호</th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            </tbody>
+            <tbody id="order-list"></tbody>
         </table>
     </div>
 </body>

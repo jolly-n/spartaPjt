@@ -38,9 +38,10 @@ def save_order():
 # 주문 목록보기(Read) API
 @app.route('/order', methods=['GET'])
 def view_order():
-    sample_receive = request.args.get('sample_give')
-    print(sample_receive)
-    return jsonify({'msg': '이 요청은 GET!'})
+    # 몽고디비에서 저장된 데이터 가져오기
+    orders = list(db.myshop.find({}, {'_id': False}))
+    # orders 정보 보내주기
+    return jsonify({'all_orders':orders})
 
 
 if __name__ == '__main__':
