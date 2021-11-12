@@ -63,12 +63,20 @@
             }
 
             function postArticle() {
+                // 유저가 입력한 input-box값 (url,comment) 가져오기
+                let url = $('#post-url').val()
+                let comment = $('#post-comment').val()
+
+                // 메모생성 요청하기
                 $.ajax({
                     type: "POST",
                     url: "/memo",
-                    data: {sample_give:'샘플데이터'},
-                    success: function (response) { // 성공하면
+                    data: {url_give:url, comment_give:comment},
+                    success: function (response) {
+                        // 성공하면 alert msg 보이기
                         alert(response["msg"]);
+                        // 페이지 새로고침하기
+                        window.location.reload()
                     }
                 })
             }
