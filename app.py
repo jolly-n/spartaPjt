@@ -29,9 +29,9 @@ def write_review():
 
 @app.route('/review', methods=['GET'])
 def read_reviews():
-    sample_receive = request.args.get('sample_give')
-    print(sample_receive)
-    return jsonify({'msg': '이 요청은 GET!'})
+    # 리뷰보여주기는 db에서 받아오기만 하면 된다.
+    reviews = list(db.bookreview.find({}, {'_id': False}))
+    return jsonify({'all_reviews':reviews})
 
 
 if __name__ == '__main__':

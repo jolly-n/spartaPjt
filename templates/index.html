@@ -11,8 +11,8 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-              crossorigin="anonymous">
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous">
 
         <!-- JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -38,8 +38,8 @@
                     type: "POST",
                     url: "/review",
                     data: {title_give:title,
-                           author_give:author,
-                           review_give:review},
+                        author_give:author,
+                        review_give:review},
                     success: function (response) {
                         alert(response["msg"]);
                         window.location.reload();
@@ -50,10 +50,24 @@
             function showReview() {
                 $.ajax({
                     type: "GET",
-                    url: "/review?sample_give=샘플데이터",
+                    url: "/review",
                     data: {},
                     success: function (response) {
-                        alert(response["msg"]);
+                        // 서버로부터 받아온 response 값을 변수에 담아주고 반복문을 돌린다.
+                        let reviews = response['all_reviews']
+                        for (let i = 0; i < reviews.length; i++) {
+                            let title = reviews[i]['title']
+                            let author = reviews[i]['author']
+                            let review = reviews[i]['review']
+
+                            // jquery를 사용해 html을 붙여준다.
+                            let temp_html = `<tr>
+                                                <td>${title}</td>
+                                                <td>${author}</td>
+                                                <td>${review}</td>
+                                            </tr>`
+                            $('#reviews-box').append(temp_html)
+                        }
                     }
                 })
             }
@@ -87,7 +101,7 @@
     <body>
         <div class="container">
             <img src="https://previews.123rf.com/images/maxxyustas/maxxyustas1511/maxxyustas151100002/47858355-education-concept-books-and-textbooks-on-the-bookshelf-3d.jpg"
-                 class="img-fluid" alt="Responsive image">
+                class="img-fluid" alt="Responsive image">
             <div class="info">
                 <h1>읽은 책에 대해 말씀해주세요.</h1>
                 <p>다른 사람을 위해 리뷰를 남겨주세요! 다 같이 좋은 책을 읽는다면 다 함께 행복해질 수 있지 않을까요?</p>
@@ -108,8 +122,8 @@
                         <span class="input-group-text">리뷰</span>
                     </div>
                     <textarea class="form-control" id="bookReview"
-                              cols="30"
-                              rows="5" placeholder="140자까지 입력할 수 있습니다."></textarea>
+                            cols="30"
+                            rows="5" placeholder="140자까지 입력할 수 있습니다."></textarea>
                 </div>
                 <div class="review">
                     <button onclick="makeReview()" type="button" class="btn btn-primary">리뷰 작성하기</button>
@@ -124,13 +138,7 @@
                         <th scope="col">리뷰</th>
                     </tr>
                     </thead>
-                    <tbody id="reviews-box">
-                    <tr>
-                        <td>왕초보 8주 코딩</td>
-                        <td>김르탄</td>
-                        <td>역시 왕초보 코딩교육의 명가답군요. 따라하다보니 눈 깜짝할 사이에 8주가 지났습니다.</td>
-                    </tr>
-                    </tbody>
+                    <tbody id="reviews-box"></tbody>
                 </table>
             </div>
         </div>
