@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <title>고양이 턱받이💕</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+        .wrap {
+            width: 600px;
+            margin: auto;
+        }
+
+        .item-img {
+            background-image: url(http://image.bom.co.kr/product/detail/BOD/2102181624046456/_600.jpg);
+            background-size: auto;
+            background-position: center;
+
+            width: 600px;
+            height: 600px;
+
+            margin-bottom: 30px;
+        }
+
+        .item-desc {
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            margin: auto;
+            display: block;
+            margin-bottom: 50px;
+        }
+
+        .item-rate {
+            color: #73b4d9;
+            margin-bottom: 30px;
+        }
+    </style>
+
+    <script>
+        // 로딩되자마자 환율이 적용되도록 한다.
+        // 로딩되자마자 주문목록이 보이도록 한다.
+        $(document).ready(function () {
+            vieworder();
+            get_rate();
+        })
+
+        function get_rate() {
+            $.ajax({
+                type: "GET",
+                url: "http://spartacodingclub.shop/sparta_api/rate",
+                data: {},
+                success: function (response) {
+                    let now_rate = response['rate']
+                    $('#now-rate').text(now_rate)
+                }
+            })
+        }
+
+        function order() {
+            // 유저가 입력한 input 값 가져오기
+            let name = $('#order-name').val();
+            let count = $('#order-count').val();
+            let address = $('#order-address').val();
+            let phone = $('#order-phone').val();
+
+            // 주문생성 요청하기
+            $.ajax({
+                type: "POST",
+                url: "/order",
+                data: {
+                    name_give: name,
+                    count_give: count,
+                    address_give: address,
+                    phone_give: phone
+                },
+                success: function (response) {
+                    // 성공하면 메세지 반환하기
+                    alert(response["msg"]);
+                    // 페이지 새로고침하기
+                    window.location.reload()
+                }
+            })
+        }
+
+        function vieworder() {
+            $.ajax({
+                type: "GET",
+                url: "/order",
+                data: {},
+                success: function (response) {
+                    let orders = response['all_orders']
+                    for (let i = 0; i < orders.length; i++) {
+                        let name = orders[i]['name']
+                        let count = orders[i]['count']
+                        let address = orders[i]['address']
+                        let phone = orders[i]['phone']
+
+                        let temp_html = `<tr>
+                                            <th scope="row">${name}</th>
+                                            <td>${count}</td>
+                                            <td>${address}</td>
+                                            <td>${phone}</td>
+                                        </tr>`
+                        $('#order-list').append(temp_html)
+                    }
+                }
+            })
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="item-img"></div>
+
+        <div class="item-desc">
+            <h1>💗고양이 턱받이💗 <span style="font-size:20px"> 가격 : 12000원 / 1개 </span></h1>
+            <h5>흡수성이 좋고 열전도성이 높아 <p>여름에는 시원하고 겨울에는 따뜻한 귀여운 고양이 턱받이!</p></h5>
+        </div>
+
+        <div class="item-rate">
+            <h5>달러-원 환율 : <span id="now-rate">1219.5</span></h5>
+        </div>
+
+        <div class="item-order">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-name">주문자 이름</span>
+                </div>
+                <input id=order-name type="text" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-count">수량</span>
+                </div>
+                <select id="order-count" class="custom-select" >
+                    <option selected> -- 수량을 선택하세요 -- </option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-address">주소</span>
+                </div>
+                <input id="order-address" type="text" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-phone">전화번호</span>
+                </div>
+                <input id="order-phone" type="text" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
+            </div>
+            <button onclick="order()" type="button" class="btn btn-danger">주문하기</button>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">이름</th>
+                <th scope="col">수량</th>
+                <th scope="col">주소</th>
+                <th scope="col">전화번호</th>
+            </tr>
+            </thead>
+            <tbody id="order-list"></tbody>
+        </table>
+    </div>
+</body>
+
+</html>
