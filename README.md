@@ -1,2 +1,2 @@
-# mini_projects
-mini-project for programming practice
+# miniProjects
+miniProject for programming practice
